@@ -1,6 +1,9 @@
 const userModel = require('../models/users_model');
 const userModelInstance = new userModel();
+
 const createError = require('http-errors');
+
+const moment = require('moment');
 
 module.exports = class authService{
   //register a new user
@@ -13,7 +16,12 @@ module.exports = class authService{
       if(user){
         throw createError(409, 'Email already in use')
       }
-      const newUser = await userModelInstance.createUser(data);
+
+      const created = moment.utc().toISOString();
+      const dataArr = [data.id, data.password, data.email, data.first_name, data.last_name, created];
+
+      const newUser = await userModelInstance.createUser(dataArr);
+
       return newUser;
     } catch(err){
       throw createError(500, err);

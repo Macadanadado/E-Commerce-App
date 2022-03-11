@@ -4,8 +4,6 @@ const usersRouter = express.Router();
 const authService = require('../services/auth_service');
 const authServiceInstance = new authService();
 
-const createError = require('http-errors');
-
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
@@ -23,10 +21,14 @@ usersRouter.post('/register', jsonParser, async (req, res, next)=>{
 
 //login a user
 usersRouter.post('/login', jsonParser, async (req, res, next)=>{
-  const data = req.body;
-  const user = await authServiceInstance.loginUser(data);
+  try{
+    const data = req.body;
+    const user = await authServiceInstance.loginUser(data);
 
-  res.send(user);
+    res.send(user);
+  } catch(err){
+    next(err);
+  }
 })
 
 module.exports = usersRouter;
