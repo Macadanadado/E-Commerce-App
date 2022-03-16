@@ -9,7 +9,7 @@ module.exports = class cartsModel {
                          RETURNING *`;
       const values = data;
 
-      const result = db.query(statement, values);
+      const result = await db.query(statement, values);
 
       if(result.rows){
         return result.rows[0];
@@ -29,7 +29,7 @@ module.exports = class cartsModel {
                          WHERE id = $1`;
       const value = [id];
 
-      const result = db.query(statement, value);
+      const result = await db.query(statement, value);
 
       if(result.rows){
         return result.rows[0]
@@ -49,7 +49,7 @@ module.exports = class cartsModel {
                          WHERE user_id = $1`;
       const value = [user_id];
 
-      const result = db.query(statement, value);
+      const result = await db.query(statement, value);
 
       if(result.rows){
         return result.rows[0]

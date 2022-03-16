@@ -9,7 +9,7 @@ module.exports = class ordersProductsModel{
                          RETURNING *`;
       const values = [data];
 
-      const result = db.query(statement, values);
+      const result = await db.query(statement, values);
 
       if(result.rows){
         return result.rows
@@ -33,7 +33,7 @@ module.exports = class ordersProductsModel{
                          WHERE op.order_id = $1`;
       const value = [id];
 
-      const result = db.query(statement, value);
+      const result = await db.query(statement, value);
 
       if(result.rows){
         return result.rows

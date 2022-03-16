@@ -5,11 +5,11 @@ module.exports = class cartsProductsModel{
   async createCartProduct(data){
     try{
       const statement = `INSERT INTO carts_products
-                         VALUES (id = $1, created = $2, product_id = $3, cart_id = $4)
+                         VALUES (id = $1, created = $2, product_id = $3, cart_id = $4, quantity = $5)
                          RETURNING *`;
-      const values = [data];
+      const values = data;
 
-      const results = db.query(statement, values);
+      const results = await db.query(statement, values);
 
       if(results.rows){
         return results.rows
@@ -33,7 +33,7 @@ module.exports = class cartsProductsModel{
                          WHERE carts_products.cart_id = $1`;
       const value = [cart_id];
 
-      const result = db.query(statement, value);
+      const result = await db.query(statement, value);
 
       if(result.rows){
         return result.rows
@@ -49,10 +49,11 @@ module.exports = class cartsProductsModel{
     try{
       const statement = `UPDATE carts_products
                          SET id = $1, created = $2, product_id = $3, cart_id = $4, quantity = $5
+                         WHERE id = $1
                          RETURNING *`;
       const values = data;
 
-      const result = db.query(statement, values)
+      const result = await db.query(statement, values)
 
       if(result.rows[0]){
         return result.rows
@@ -72,7 +73,7 @@ module.exports = class cartsProductsModel{
                          RETURNING *`;
       const value = id;
 
-      const result = db.query(statement, value);
+      const result = await db.query(statement, value);
 
       if(result.rows){
         return result.rows;
