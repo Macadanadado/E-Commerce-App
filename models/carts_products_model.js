@@ -5,7 +5,7 @@ module.exports = class cartsProductsModel{
   async createCartProduct(data){
     try{
       const statement = `INSERT INTO carts_products
-                         VALUES (id = $1, created = $2, product_id = $3, cart_id = $4, quantity = $5)
+                         VALUES ($1, $2, $3, $4, $5)
                          RETURNING *`;
       const values = data;
 
@@ -26,7 +26,7 @@ module.exports = class cartsProductsModel{
       //select product information for products in cart
       const statement = `SELECT 
                           carts_products.quantity,
-                          carts_products.id as 'cart_product_id
+                          carts_products.id AS "cart_product_id",
                           products.*
                          FROM carts_products
                          JOIN products ON carts_products.product_id = products.id
@@ -65,13 +65,13 @@ module.exports = class cartsProductsModel{
   }
 
   //delete cart product
-  async deleteCartProduct(id){
+  async deleteCartProduct(data){
     try{
       const statement = `DELETE 
                          FROM carts_products
                          WHERE id = $1
                          RETURNING *`;
-      const value = id;
+      const value = data;
 
       const result = await db.query(statement, value);
 
