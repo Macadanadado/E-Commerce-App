@@ -4,10 +4,10 @@ module.exports = class ordersProductsModel{
   //create item
   async create(data){
     try{
-      const statement = `INSERT INTO orders_products
-                         VALUES (id = $1, quantity = $2, created = $3, price = $4, order_id = $5, product_id = $6)
+      const statement = `INSERT INTO orders_products (quantity, created, price, order_id, product_id)
+                         VALUES ($1, $2, $3, $4, $5)
                          RETURNING *`;
-      const values = [data];
+      const values = data;
 
       const result = await db.query(statement, values);
 

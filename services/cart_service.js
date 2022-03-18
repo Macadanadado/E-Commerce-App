@@ -2,9 +2,14 @@ const cartModel = require('../models/carts_model');
 const cartModelInstance = new cartModel();
 const cartsProductsModel = require('../models/carts_products_model');
 const cartsProductsModelInstance = new cartsProductsModel();
+const ordersModel = require('../models/orders_model');
+const ordersModelInstance = new ordersModel();
+const ordersProductsModel = require('../models/orders_products_model');
+const ordersProductsModelInstance = new ordersProductsModel();
 
 const createError = require('http-errors');
 const moment = require('moment');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = class cartService{
   //create a new cart
@@ -79,6 +84,27 @@ module.exports = class cartService{
       const data = [cartItemId]
       const response = await cartsProductsModelInstance.deleteCartProduct(data);
       return response
+    }catch(err){
+      throw createError(500, err);
+    }
+  }
+
+  //checkout
+  async checkout(userId){
+    try{
+      const cart = await cartModelInstance.findCartByUserId(userId);
+      const items = await cartsProductsModelInstance.findProductsInCart(cart.id);
+      const total = items.reduce((total, item) => {
+        const price = item.price.substring(1)
+        return total += Number(price);
+       }, 0);
+
+      const created = moment.utc().toISOString();
+      
+      const data = [created, total, 'Pending', userId]
+      const createdOrder = await ordersModelInstance.createOrder(data);
+      
+      items.forEach(item => ordersProductsModelInstance.create([item.quantity, created, item.price, createdOrder.id, item.id]))
     }catch(err){
       throw createError(500, err);
     }

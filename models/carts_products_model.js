@@ -14,7 +14,7 @@ module.exports = class cartsProductsModel{
       if(results.rows){
         return results.rows
       }
-      return results.rows
+      return null;
     } catch(err){
       throw new Error(err);
     }

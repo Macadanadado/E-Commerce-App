@@ -72,4 +72,17 @@ cartsRouter.delete('/mycart/items/:cartitemId', async (req, res, next)=>{
   }
 })
 
+//checkout
+cartsRouter.post('/mycart/:userId/checkout', async (req, res, next)=>{
+  try{
+    const userId = req.params.userId
+    
+    const response = await cartServiceInstance.checkout(userId);
+
+    res.send(response);
+  }catch(err){
+    next(err)
+  }
+})
+
 module.exports = cartsRouter;
