@@ -21,12 +21,12 @@ module.exports = class ordersModule{
   }
 
   //update order
-  async updateOrder(data){
+  async updateOrder(status){
     try{
       const statement = `UPDATE orders
-                         SET id = $1, created = $2, total = $3, status = $4, user_id = $5
+                         SET status = $1
                          RETURNING *`;
-      const values = [data];
+      const values = [status];
 
       const result = await db.query(statement, values);
 
